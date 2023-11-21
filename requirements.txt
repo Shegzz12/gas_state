@@ -2,7 +2,4 @@ Flask
 Flask-Cors
 gunicorn
 numpy
-pickle
-json
 joblib
-os
