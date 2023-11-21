@@ -1,14 +1,10 @@
-import json
-import pickle
+import joblib
 import numpy as np
-import pickle
 
-__result = None
-model = None
+model_path = "nalasha.pkl"
 
-# Load the trained model from the pickle file
-with open('nalasha.pkl', 'rb') as file:
-    model = pickle.load(file)
+# model_abs_path = os.path.join(os.getcwd(), model_path)
+model = joblib.load(model_path)
 
 # Function to get user input and make predictions
 def predict_user_input(input1, input2, input3):
@@ -32,4 +28,3 @@ def predict_user_input(input1, input2, input3):
 
 # Call the function to get user input and make predictions
 # predict_user_input(2, 1, 1)
-

@@ -1,6 +1,8 @@
 from flask import Flask, request, jsonify
 import util
 
+util_path = "util.py"
+
 app = Flask(__name__)
 
 # Initialize values to be used if no data is received
