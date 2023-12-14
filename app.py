@@ -152,6 +152,11 @@ def download_csv():
     #Sends the database to the front end for download
     return send_file(csv_file_path, as_attachment=True)
 
+@app.route('/download_dataset')
+def download_dataset():
+    #Sends the database to the front end for download
+    return send_file('Nalasha_dataset', as_attachment=True)
+
 # Route to get all records
 @app.route('/records', methods=['GET'])
 def get_records():
