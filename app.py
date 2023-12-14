@@ -136,7 +136,8 @@ def predict_user_input():
         input3 = val3
 
         # Call the utility function to make predictions
-        result = util.predict_user_input(input1, input2, input3)
+        resul = util.predict_user_input(input1, input2, input3)
+        result = resul + 1
         # Construct the response
         response = jsonify({
             'result': result
