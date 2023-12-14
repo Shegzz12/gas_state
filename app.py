@@ -10,6 +10,9 @@ import util
 val1 = 2
 val2 = 1
 val3 = 1
+data1 = 50
+data2 = 2000
+data3 = 800
 id = 20
 timestamp = '2023-12-08 12:45:02' #datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     
@@ -20,7 +23,7 @@ socketio = SocketIO(app)
 
 # CSV file path
 csv_file_path = 'Nalasha_database.csv'
-fieldnames = ['TIMESTAMP', 'OZONE', 'NH3', 'CO', 'id']
+fieldnames = ['TIMESTAMP', 'OZONE', 'NH3', 'CO', 'RESULT', 'id']
 
 # Helper function to read all records from the CSV file
 # Helper function to read all records from the CSV file
@@ -34,6 +37,7 @@ def read_records():
                 'OZONE': row['OZONE'],
                 'NH3': row['NH3'],
                 'CO': row['CO'],
+                'RESULT': row['RESULT'],
                 'id': row['id'],
             })
     return records
@@ -46,16 +50,21 @@ def write_records(records):
         writer.writeheader()
 
         for record in records:
+            try:
             # Ensure the timestamp is in the correct format (string)
             # timestamp = record['timestamp']
             # Write the record to the CSV file
-            writer.writerow({
-                'TIMESTAMP': record['TIMESTAMP'],
-                'OZONE': record['OZONE'],
-                'NH3': record['NH3'],
-                'CO': record['CO'],
-                'id': record['id']
-            })
+                writer.writerow({
+                    'TIMESTAMP': record['TIMESTAMP'],
+                    'OZONE': record['OZONE'],
+                    'NH3': record['NH3'],
+                    'CO': record['CO'],
+                    'RESULT': record['RESULT'],
+                    'id': record['id']
+                })
+            except KeyError as e:
+                print(f"KeyError: {e} not found in record. Skipping this record.")
+                print("Record:", record)
 
 # Background thread to send data to the frontend
 def background_thread():
@@ -66,32 +75,39 @@ def background_thread():
 
 @app.route('/')
 def index():
+    get_records()
     return render_template('index_realtime.html')
 
 @app.route('/send_data', methods=['POST'])
 def receive_data():
-    global val1, val2, val3, timestamp, id
+    global val1, val2, val3, timestamp, id, data1, data2, data3, result
     received_data = request.get_json()
 
     # Read existing records
     records = read_records()
 
-    if 'OZONE' in received_data and 'NH3' in received_data and 'CO' in received_data:
+    if 'OZONE' in received_data and 'NH3' in received_data and 'CO' in received_data and 'gas1' in received_data and 'gas2' in received_data and 'gas3' in received_data:
         val1 = received_data['OZONE']
         val2 = received_data['NH3']
         val3 = received_data['CO']
+        data1 = received_data['gas1']
+        data2 = received_data['gas2']
+        data3 = received_data['gas3']
         id = len(records) + 1
 
         timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        #get result using val1, val2 and val3
+        predict_user_input()
 
-        print(f"Received OZONE: {val1}, NH3: {val2}, CO: {val3}")
+        print(f"Received gas1: {data1}, gas2: {data2}, gas3: {data3}, val1: {val1}, val2: {val2}, val3: {val3}")
 
         # Append the received data to the CSV file
         new_record = {
-            'timestamp': timestamp,
-            'OZONE': val1,
-            'NH3': val2,
-            'CO': val3,
+            'TIMESTAMP': timestamp,
+            'OZONE': data1,
+            'NH3': data2,
+            'CO': data3,
+            'RESULT': result,
             'id': len(records) + 1,
         }
         records.append(new_record)
@@ -113,7 +129,7 @@ def test_connect():
 @app.route('/gas_state', methods=['GET'])
 def predict_user_input():
     try:
-        global val1, val2, val3
+        global val1, val2, val3, result
         # Use the received values or default values if not received
         input1 = val1
         input2 = val2

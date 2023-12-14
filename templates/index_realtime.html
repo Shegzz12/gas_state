@@ -130,6 +130,7 @@
             <th>OZONE</th>
             <th>NH3</th>
             <th>CO</th>
+            <th>RESULT</th>
             <th>ID</th>
         </tr>
     </thead>
@@ -164,7 +165,7 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.3/socket.io.js"></script>
 <script>
-    var socket = io.connect('https://' + document.domain + ':' + location.port + '/test');
+    var socket = io.connect('http://' + document.domain + ':' + location.port + '/test');
 
     socket.on('update_data', function(msg) {
         updateTable(msg.data);
@@ -185,12 +186,14 @@
         var cellOZONE = row.insertCell(1);
         var cellNH3 = row.insertCell(2);
         var cellCO = row.insertCell(3);
-        var cellId = row.insertCell(4);  // Display ID last
+        var cellRESULT = row.insertCell(4);
+        var cellId = row.insertCell(5);  // Display ID last
 
         cellTIMESTAMP.innerHTML = data[i].TIMESTAMP;
         cellOZONE.innerHTML = data[i].OZONE;
         cellNH3.innerHTML = data[i].NH3;
         cellCO.innerHTML = data[i].CO;
+        cellRESULT.innerHTML = data[i].RESULT;
         cellId.innerHTML = data[i].id;
     }
 
