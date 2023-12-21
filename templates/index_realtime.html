@@ -82,15 +82,6 @@
             border-radius: 4px;
             cursor: pointer;
         }
-        #download-dataset {
-            background-color: #8888b8bd;
-            line-height: normal;
-            color: blue;
-            padding: 15px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
         .fixed-element {
             position: fixed;
         }
@@ -130,14 +121,14 @@
     <h2>FEDERAL UNIVERSITY OF TECHNOLOGY, MINNA</h2>
     <h2>FEDERAL UNIVERSITY OF TECHNOLOGY, MINNA</h2>
 <h2>Asthmatic Protection Device Database</h2>
-<h3>DONE BY: Nalasha Grace</h3>
+<h3>DONE BY: Grace Yusufu Abashe</h3>
 
 <table id="data-table">
     <thead>
         <tr>
             <th>Timestamp</th>
             <th>OZONE</th>
-            <th>NH3</th>
+            <th>H2S</th>
             <th>CO</th>
             <th>RESULT</th>
             <th>ID</th>
@@ -151,9 +142,7 @@
 <body>
     <button id="download-btn" onclick="downloadCSV()">Download CSV</button>
 </body>
-<body>
-    <button id="download-dataset" onclick="downloadDataset()">Download Dataset</button>
-</body>
+
 <button id="delete-btn" onclick="deleteAllData()">Delete CSV data</button>
 
 <script>
@@ -176,7 +165,7 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.3/socket.io.js"></script>
 <script>
-    var socket = io.connect('https://' + document.domain + ':' + location.port + '/test');
+    var socket = io.connect('http://' + document.domain + ':' + location.port + '/test');
 
     socket.on('update_data', function(msg) {
         updateTable(msg.data);
@@ -214,10 +203,6 @@
 function downloadCSV() {
 // Make a request to the server to download the CSV file
 window.location.href = '/download_csv';
-}
-function downloadDataset() {
-// Make a request to the server to download the CSV file
-window.location.href = '/download_dataset';
 }
 
 
